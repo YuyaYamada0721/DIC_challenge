@@ -28,8 +28,18 @@ class Cart
     return if owner.wallet.balance < total_amount
   # ## 要件
   #   - カートの中身（Cart#items）のすべてのアイテムの購入金額が、カートのオーナーのウォレットからアイテムのオーナーのウォレットに移されること。
+  self.owner.wallet.withdraw(total_amount)
+  @items.each do |item|
+    item.owner.wallet.deposit(item.price)
+  end
+
   #   - カートの中身（Cart#items）のすべてのアイテムのオーナー権限が、カートのオーナーに移されること。
+  @items.each do |item|
+    item.owner = self.owner
+  end
+
   #   - カートの中身（Cart#items）が空になること。
+  @items = []
 
   # ## ヒント
   #   - カートのオーナーのウォレット ==> self.owner.wallet
